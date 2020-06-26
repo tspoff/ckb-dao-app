@@ -4,6 +4,11 @@ Example React app for interfacing w/ CKB-DAO
 # Usage
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Environment
+Optionally, add a private key to environment for testing purposes.
+
+**Warning: *Never* use a private key holding real funds**
+
 ## Available Scripts
 
 In the project directory, you can run:
