@@ -1,8 +1,7 @@
 import { action, observable } from 'mobx';
-import RootStore from 'stores/RootStore';
+import RootStore from '../../stores/RootStore';
 import { AddressPrefix, AddressType as Type, pubkeyToAddress } from '@nervosnetwork/ckb-sdk-utils';
 import Address from '../../ckb-helpers/Address';
-const EC = require('elliptic').ec
 
 interface Wallet {
     privateKey: string;
@@ -30,6 +29,11 @@ export default class WalletService {
 
         this.hasActiveWallet = true;
     }
+    
+    //TODO: How to serialize the TX properly for signing?
+    sign(data: any): string {
+        return '';
+    }
 
     getPrivateKey() {
         return this.activeWallet.privateKey;
@@ -45,11 +49,6 @@ export default class WalletService {
 
     getPubKeyHash() {
         return this.activeWallet.address.getPublicKeyHash();
-    }
-
-    public static generateKeyPair = () => {
-        const ec = new EC('secp256k1')
-        return ec.genKeyPair();    
     }
 }
 

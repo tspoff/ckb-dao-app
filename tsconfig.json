@@ -13,14 +13,17 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "baseUrl": "src",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
     "noEmit": true,
     "strictNullChecks": false,
-    "jsx": "react"
+    "noImplicitAny": false,
+    "jsx": "react",
+    "rootDir": "src",
+    "outDir": "dist/js",
+    "baseUrl": "."
   },
   "include": [
     "src"
