@@ -4,6 +4,11 @@ export enum HashType {
     Data = "data",
     Type = "type"
 }
+
+export enum DepType {
+    Code = "code",
+    DepGroup = "dep_group"
+}
  export interface Script {
     code_hash: string;
     hash_type: HashType;
@@ -12,23 +17,65 @@ export enum HashType {
 
 export interface Outpoint {
     tx_hash: string;
-    index: number;
+    index: string;
 }
-export interface Cell {
+
+export interface CellConstructor {
     capacity: number;
     lock: Script | null;
     type: Script | null;
     data: string;
-    outpoint?: Outpoint;
+    out_point?: Outpoint;
+}
+export class Cell {
+    capacity: number;
+    lock: Script | null;
+    type: Script | null;
+    data: string;
+    out_point?: Outpoint;
+    constructor(args: CellConstructor) {
+        const {capacity, lock, type, data, out_point} = args;
+        this.capacity = capacity;
+        this.lock = lock;
+        this.type = type;
+        this.data = data;
+        if (out_point) {
+            this.out_point = out_point;
+        }
+    }
+
+    static fromJsonObject(jsonCell) {
+        console.log(jsonCell);
+        return new Cell(
+            {
+                capacity: jsonCell.capacity,
+                lock: jsonCell.lock,
+                type: jsonCell.type,
+                data: jsonCell.data,
+                out_point: jsonCell.out_point
+            }
+        );
+    }
+
+    serializeJson() {
+        return {
+
+        }
+    }
+}
+
+export interface CellDep {
+    dep_type: DepType;
+    out_point: Outpoint;
 }
 
 export class Transaction {
     inputs: Cell[];
     outputs: Cell[];
-    deps: Cell[];
+    deps: CellDep[];
     witnesses: string[];
 
-    constructor(inputs = [] as Cell[], outputs = [] as Cell[], deps = [] as Cell[], witnessess = [] as string[]) {
+    constructor(inputs = [] as Cell[], outputs = [] as Cell[], deps = [] as CellDep[], witnessess = [] as string[]) {
         this.inputs = inputs;
         this.outputs = outputs;
         this.deps = deps;
@@ -47,9 +94,9 @@ export default class TxGeneratorService {
         this.rootStore = rootStore;
     }
 
-    gatherInputCapacityForOutputs(inputLockScript: Script, outputs: Cell[]): Cell[] {
-        const {indexerService} = this.rootStore;
-        const inputCells = indexerService.getCellsByLockScript(inputLockScript);
+    async gatherInputCapacityForOutputs(inputLockScript: Script, outputs: Cell[]): Promise<Cell[]> {
+        const {ckbIndexerService} = this.rootStore;
+        const inputCells = await ckbIndexerService.getCellsByLockScript(inputLockScript);
 
         const requiredOutputCapacity = this.sumCapacity(outputs);
 

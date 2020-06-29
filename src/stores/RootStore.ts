@@ -2,7 +2,7 @@
 import CkbNodeService from '../services/ckb/CkbNodeService';
 import WalletService from '../services/ckb/WalletService';
 import { ConfigService } from '../services/ConfigService';
-import IndexerService from '../services/ckb/IndexerService';
+import CkbIndexerService from '../services/ckb/CkbIndexerService';
 import TxGeneratorService from '../services/ckb/TxGeneratorService';
 import CodeLibraryService from '../services/ckb/CodeLibraryService';
 import CkbTransferService from '../services/ckb/CkbTransferService';
@@ -11,7 +11,7 @@ export default class RootStore {
     configService: ConfigService;
     ckbNodeService: CkbNodeService;
     walletService: WalletService;
-    indexerService: IndexerService;
+    ckbIndexerService: CkbIndexerService;
     txGeneratorService: TxGeneratorService;
     codeLibraryService: CodeLibraryService;
     ckbTransferService: CkbTransferService;
@@ -20,7 +20,7 @@ export default class RootStore {
         this.configService = new ConfigService();
         this.ckbNodeService = new CkbNodeService(this);
         this.walletService = new WalletService(this);
-        this.indexerService = new IndexerService(this);
+        this.ckbIndexerService = new CkbIndexerService(this);
         this.txGeneratorService = new TxGeneratorService(this);
         this.codeLibraryService = new CodeLibraryService(this);
         this.ckbTransferService = new CkbTransferService(this);
@@ -29,8 +29,11 @@ export default class RootStore {
     }
 
     async initialize() {
-        this.ckbNodeService.initCkb(this.configService.CKB_RPC_ENDPOINT);
+        this.ckbNodeService.initRPC(this.configService.CKB_RPC_ENDPOINT);
         this.walletService.setActiveWallet(this.configService.PRIVATE_KEY);
-        this.indexerService.collectCells();
+        const latestBlock = await this.ckbNodeService.rpc.get_tip_block_number();
+        console.log('latestBlock', latestBlock);
+        await this.codeLibraryService.initializeKnownCodeLibs();
+        await this.ckbIndexerService.getCellsByLockScript(this.walletService.getLockScript());
     }
 }
