@@ -7,7 +7,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Environment
 Optionally, add a private key to environment for testing purposes.
 
-**Warning: *Never* use a private key holding real funds**
+**This example project is not designed for security. Don't use a private key that will ever hold funds on mainnet**
 
 ## Available Scripts
 
