@@ -1,8 +1,21 @@
 # ckb-dao-app
 Example React app for interfacing w/ CKB-DAO
 
+# Design Notes
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) typescript template.
+
+Functionality is grouped into services. The “services” classes abstract away the actual implementation from the components whether it’s a local indexer, talking to a server, etc…
+Services also have Mobx stores which maintain local state.
+
+Components interact with the services directly, which are injected via a Context. They can subscribe to state changes from the services via Mobx observer pattern.
+
+## Future goals
+* Switch out Mobx for React hooks & contexts to make the app more accessible, for example purposes
+* Replace service implementations with external components when appropriate (Wallets, Indexers, etc)
+
+* Migrate functionality over to “canonical Lumos style” as that emerges.
+
 # Usage
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Environment
 Optionally, add a private key to environment for testing purposes.
