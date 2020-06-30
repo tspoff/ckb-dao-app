@@ -1,9 +1,11 @@
 import RootStore from '../../stores/RootStore';
-import { Script, Cell, Transaction } from './TxGeneratorService';
-import { observable } from 'mobx';
+import { Cell, Transaction, Script } from "../../ckb-helpers";
+import { action, observable } from 'mobx';
+import { scriptToHash } from 'src/ckb-helpers/utils';
+import BigNumber from 'bignumber.js';
 
 interface BalanceMap {
-    [index: string]: number;
+    [index: string]: BigNumber;
 }
 
 export default class CkbTransferService {
@@ -12,32 +14,34 @@ export default class CkbTransferService {
 
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
+        this.balances = {} as BalanceMap;
     }
 
-    // Accounts are Scripts, but indexed in serialized string from in object.
-    serializeScript(account: Script): string {
-        return account.toString();
+    isBalanceLoaded(lockHash: string) {
+        return !!this.balances[lockHash];
     }
 
     //TODO: Replace all numbers with some BN representation
-    getBalance(account: Script): number {
-        return 0;
-        // const balance = this.balances[this.serializeScript(account)];
+    getBalance(lockHash: string): BigNumber {
+        const balance = this.balances[lockHash];
 
-        // if (balance) {
-        //     return balance;
-        // } else {
-        //     return 0;
-        // }
+        if (balance) {
+            return balance;
+        } else {
+            return new BigNumber(0);
+        }
     }
 
-    async fetchBalance(account: Script) {
+    @action async fetchBalance(lockHash: string) {
         const {ckbIndexerService, txGeneratorService} = this.rootStore;
-        const cells = await ckbIndexerService.getCellsByLockScript(account);
-        return txGeneratorService.sumCapacity(cells);
+        console.log('getting cells');
+        const cells = await ckbIndexerService.getCellsByLockHash(lockHash);
+        console.log('getting capacity');
+        const balance = txGeneratorService.sumCapacity(cells);
+        this.balances[lockHash] = balance;
     }
 
-    async transferCkb(sender: Script, recipient: Script, amount: number): Promise<any> {
+    async transferCkb(sender: Script, recipient: Script, amount: BigNumber): Promise<any> {
         const {ckbNodeService, walletService} = this.rootStore;
 
         const tx = await this.generateCkbTransferTX(sender, recipient, amount);
@@ -46,7 +50,7 @@ export default class CkbTransferService {
         return await ckbNodeService.sendTransaction(tx);
     }
 
-    async generateCkbTransferTX(sender: Script, recipient: Script, amount: number): Promise<Transaction> {
+    async generateCkbTransferTX(sender: Script, recipient: Script, amount: BigNumber): Promise<Transaction> {
         const {codeLibraryService, txGeneratorService} = this.rootStore;
 
         const outputs = [] as Cell[];

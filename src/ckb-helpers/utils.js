@@ -1,6 +1,8 @@
 import secp256k1 from "secp256k1";
 import { Reader, normalizers, validators } from "ckb-js-toolkit";
 import { Hasher } from "ckb-js-toolkit-contrib/src/hasher";
+import Script from "src/services/ckb/TxGeneratorService";
+import * as blockchain from "ckb-js-toolkit-contrib/src/blockchain.js";
 
 export function ckbHash(buffer) {
   const h = new Hasher();
@@ -44,4 +46,12 @@ export function arrayBufferToHex(arrayBuffer)
         hexOctets.push(byteToHex[buff[i]]);
 
     return "0x" + hexOctets.join("");
+}
+
+export function scriptToHash(script) {
+  return arrayBufferToHex(
+    ckbHash(
+      blockchain.SerializeScript(normalizers.NormalizeScript(script))
+    ).view.buffer
+  );
 }

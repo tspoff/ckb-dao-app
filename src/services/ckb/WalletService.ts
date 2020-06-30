@@ -1,13 +1,9 @@
 import { action, observable } from "mobx";
 import RootStore from "../../stores/RootStore";
-import {
-  AddressPrefix,
-  AddressType as Type,
-  pubkeyToAddress,
-} from "@nervosnetwork/ckb-sdk-utils";
-import Address from "../../ckb-helpers/Address";
-import { Script } from "./TxGeneratorService";
+import { Script } from "../../ckb-helpers";
 import { KnownCodeLibs } from "./CodeLibraryService";
+import { ckbHash, scriptToHash } from "src/ckb-helpers/utils";
+import Address from "src/ckb-helpers/Address";
 
 interface Wallet {
   privateKey: string;
@@ -50,6 +46,10 @@ export default class WalletService {
 
   getPubKeyHash() {
     return this.activeWallet.address.getPublicKeyHash();
+  }
+
+  getLockHash() {
+    return scriptToHash(this.getLockScript());
   }
 
   getLockScript(): Script {

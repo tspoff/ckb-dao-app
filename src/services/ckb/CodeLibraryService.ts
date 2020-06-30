@@ -1,6 +1,6 @@
 import { action, observable } from "mobx";
 import RootStore from "../../stores/RootStore";
-import { HashType, Cell, CellDep, DepType } from "./TxGeneratorService";
+import { Cell, CellDep, DepType, HashType } from "../../ckb-helpers";
 
 export enum KnownCodeLibs {
   Secp256k1 = "Secp256k1",
@@ -49,7 +49,6 @@ export default class CodeLibraryService {
     };
 
     this.codeLibsLoaded = true;
-
     console.log('Code Libs Loaded', this.codeLibs);
   }
 

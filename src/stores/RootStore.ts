@@ -6,6 +6,7 @@ import CkbIndexerService from '../services/ckb/CkbIndexerService';
 import TxGeneratorService from '../services/ckb/TxGeneratorService';
 import CodeLibraryService from '../services/ckb/CodeLibraryService';
 import CkbTransferService from '../services/ckb/CkbTransferService';
+import AggregatorService from '../services/aggregator/AggregatorService';
 
 export default class RootStore {
     configService: ConfigService;
@@ -15,6 +16,7 @@ export default class RootStore {
     txGeneratorService: TxGeneratorService;
     codeLibraryService: CodeLibraryService;
     ckbTransferService: CkbTransferService;
+    aggregatorService: AggregatorService;
 
     constructor() {
         this.configService = new ConfigService();
@@ -24,6 +26,7 @@ export default class RootStore {
         this.txGeneratorService = new TxGeneratorService(this);
         this.codeLibraryService = new CodeLibraryService(this);
         this.ckbTransferService = new CkbTransferService(this);
+        this.aggregatorService = new AggregatorService(this);
 
         this.initialize();
     }
@@ -33,7 +36,9 @@ export default class RootStore {
         this.walletService.setActiveWallet(this.configService.PRIVATE_KEY);
         const latestBlock = await this.ckbNodeService.rpc.get_tip_block_number();
         console.log('latestBlock', latestBlock);
+        console.log('Reading code libs');
         await this.codeLibraryService.initializeKnownCodeLibs();
-        await this.ckbIndexerService.getCellsByLockScript(this.walletService.getLockScript());
+        console.log('Getting balance for user Wallet');
+        await this.ckbTransferService.fetchBalance(this.walletService.getLockHash());
     }
 }

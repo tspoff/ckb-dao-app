@@ -1,9 +1,7 @@
 import { action, observable } from 'mobx';
-import CKB from '@nervosnetwork/ckb-sdk-core';
 import RootStore from '../../stores/RootStore';
-import { Script, Cell, Transaction, DepType } from './TxGeneratorService';
-import { RPC, Reader, validators, normalizers, transformers, cell_collectors } from "ckb-js-toolkit";
-import * as blockchain from "ckb-js-toolkit-contrib/src/blockchain.js";
+import { Cell, Transaction } from "../../ckb-helpers";
+import { RPC, cell_collectors } from "ckb-js-toolkit";
 
 export default class CkbNodeService {
     @observable rpc: RPC;
@@ -22,13 +20,12 @@ export default class CkbNodeService {
     }
     
     async fetchCellsByLockHash(lockHash: string): Promise<Cell[]> {
-
         const collector = new cell_collectors.RPCCollector(this.rpc, lockHash);
 
         const cells: Cell[] = [];
         for await (const cell of collector.collect()) { 
-            console.log('cell found', cell);
             cells.push(Cell.fromJsonObject(cell));
+            console.log('cell found', cell, Cell.fromJsonObject(cell));
         }
         return cells;
     }
