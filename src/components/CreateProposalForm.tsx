@@ -23,7 +23,7 @@ const Button = styled.button`
   border-radius: 3px;
 `;
 
-const CreateProposal = observer(() => {
+const CreateProposalForm = observer(() => {
   const {
     root: { aggregatorService },
   } = useServices();
@@ -107,4 +107,4 @@ const CreateProposal = observer(() => {
   );
 });
 
-export default CreateProposal;
+export default CreateProposalForm;

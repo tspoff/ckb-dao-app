@@ -6,10 +6,11 @@ import BigNumber from "bignumber.js";
 import RootStore from "src/stores/RootStore";
 import { action, observable } from "mobx";
 import { ckbHash } from "src/ckb-helpers/utils";
+import { sampleProposals } from "./sampleProposals";
 
 export interface DAOProposal {
-    inputs: Cell[],
-    outputs: Cell[],
+    inputs?: Cell[],
+    outputs?: Cell[],
     metadata: {
         amount: BigNumber;
         recipientLockHash: string | null;
@@ -18,22 +19,23 @@ export interface DAOProposal {
         title: string;
         body: string;
     }
-    signatures?: string[]
+    signatures?: string[],
+    tags?: string[]
 }
 
 // Mapping of DAOID -> Proposals
-interface ProposalMap {
+export interface DAOProposalMap {
     [index: string]: DAOProposal;
 }
 
 export default class AggregatorService {
     @observable daoId: string;
-    @observable proposals: ProposalMap;
+    @observable proposals: DAOProposalMap;
     rootStore: RootStore;
 
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
-        this.proposals = {} as ProposalMap;
+        this.proposals = sampleProposals;
     }
 
     @action addProposal(proposal: DAOProposal) {

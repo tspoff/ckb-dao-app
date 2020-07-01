@@ -1,24 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react";
-import { useServices } from "../contexts/ServicesContext";
-import { Row, Col } from "./common/Grid";
-import CreateProposal from "./CreateProposalForm";
+import { useStores } from "src/contexts/StoresContext";
+import { useServices } from "src/contexts/ServicesContext";
+import Modal from "src/components/common/Modal";
 
-const Wrapper = styled.div`
-  width: 100%;
-  padding-top: 8px;
-`;
-
-const Header = styled.div`
-  width: 100%;
-  padding-top: 8px;
-`;
-
-const WalletInfo = observer(() => {
+const WalletModal = observer(() => {
   const {
     root: { ckbTransferService, walletService, codeLibraryService },
   } = useServices();
+
+  const {
+    root: { walletModalStore },
+  } = useStores();
 
   let walletText = {
     privateKey: "-",
@@ -40,16 +34,21 @@ const WalletInfo = observer(() => {
     walletText.balance = ckbTransferService.isBalanceLoaded(lockHash) ? ckbTransferService.getBalance(lockHash).toString() : "-";
   }
 
-  return (  
-    <Wrapper>
-      <Header>
-        <Row>
-          <Col size={2}>{walletText.balance} CKB</Col>
-          <Col size={3}> {walletText.address}</Col>
-        </Row>
-      </Header>
-    </Wrapper>
+  //@ts-ignore
+  return (
+    <Modal
+      isOpen={walletModalStore.isVisible}
+      onDismiss={walletModalStore.setVisible(false)}
+      minHeight={null}
+      maxHeight={90}
+    >
+      <div>
+      <p>PrivateKey: {walletText.privateKey}</p>
+      <p>PublicKey: {walletText.publicKey}</p>
+      <p>Address: {walletText.address}</p>
+      <p>PubKeyHash: {walletText.pubKeyHash}</p>
+      </div>
+    </Modal>
   );
 });
-
-export default WalletInfo;
+export default WalletModal;

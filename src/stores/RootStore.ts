@@ -7,6 +7,7 @@ import TxGeneratorService from '../services/ckb/TxGeneratorService';
 import CodeLibraryService from '../services/ckb/CodeLibraryService';
 import CkbTransferService from '../services/ckb/CkbTransferService';
 import AggregatorService from '../services/aggregator/AggregatorService';
+import WalletModalStore from './WalletModalStore';
 
 export default class RootStore {
     configService: ConfigService;
@@ -17,6 +18,7 @@ export default class RootStore {
     codeLibraryService: CodeLibraryService;
     ckbTransferService: CkbTransferService;
     aggregatorService: AggregatorService;
+    walletModalStore: WalletModalStore;
 
     constructor() {
         this.configService = new ConfigService();
@@ -27,6 +29,8 @@ export default class RootStore {
         this.codeLibraryService = new CodeLibraryService(this);
         this.ckbTransferService = new CkbTransferService(this);
         this.aggregatorService = new AggregatorService(this);
+        
+        this.walletModalStore = new WalletModalStore(this);
 
         this.initialize();
     }
