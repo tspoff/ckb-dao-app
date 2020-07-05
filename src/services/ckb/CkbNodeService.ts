@@ -18,15 +18,4 @@ export default class CkbNodeService {
     @action async sendTransaction(transaction: Transaction): Promise<any> {
         return true;
     }
-    
-    async fetchCellsByLockHash(lockHash: string): Promise<Cell[]> {
-        const collector = new cell_collectors.RPCCollector(this.rpc, lockHash);
-
-        const cells: Cell[] = [];
-        for await (const cell of collector.collect()) { 
-            cells.push(Cell.fromJsonObject(cell));
-            console.log('cell found', cell, Cell.fromJsonObject(cell));
-        }
-        return cells;
-    }
 }

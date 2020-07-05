@@ -32,13 +32,14 @@ export default class CkbTransferService {
         }
     }
 
-    @action async fetchBalance(lockHash: string) {
+    @action async fetchBalance(lockScript: Script) {
         const {ckbIndexerService, txGeneratorService} = this.rootStore;
         console.log('getting cells');
-        const cells = await ckbIndexerService.getCellsByLockHash(lockHash);
-        console.log('getting capacity');
+        const cells = await ckbIndexerService.getCells(lockScript);
+        console.log('getting balance');
         const balance = txGeneratorService.sumCapacity(cells);
-        this.balances[lockHash] = balance;
+        console.log('getBalance:', balance.toString());
+        this.balances[scriptToHash(lockScript)] = balance;
     }
 
     async transferCkb(sender: Script, recipient: Script, amount: BigNumber): Promise<any> {

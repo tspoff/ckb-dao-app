@@ -24,7 +24,7 @@ export default class RootStore {
         this.configService = new ConfigService();
         this.ckbNodeService = new CkbNodeService(this);
         this.walletService = new WalletService(this);
-        this.ckbIndexerService = new CkbIndexerService(this);
+        this.ckbIndexerService = new CkbIndexerService(this, this.configService.INDEXER_URI);
         this.txGeneratorService = new TxGeneratorService(this);
         this.codeLibraryService = new CodeLibraryService(this);
         this.ckbTransferService = new CkbTransferService(this);
@@ -43,6 +43,6 @@ export default class RootStore {
         console.log('Reading code libs');
         await this.codeLibraryService.initializeKnownCodeLibs();
         console.log('Getting balance for user Wallet');
-        await this.ckbTransferService.fetchBalance(this.walletService.getLockHash());
+        await this.ckbTransferService.fetchBalance(this.walletService.getLockScript());
     }
 }

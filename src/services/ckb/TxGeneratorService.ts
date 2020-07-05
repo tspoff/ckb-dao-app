@@ -12,7 +12,7 @@ export default class TxGeneratorService {
 
     async gatherInputCapacityForOutputs(inputLockScript: Script, outputs: Cell[]): Promise<Cell[]> {
         const {ckbIndexerService} = this.rootStore;
-        const inputCells = await ckbIndexerService.getCellsByLockHash(scriptToHash(inputLockScript));
+        const inputCells = await ckbIndexerService.getCells(inputLockScript);
 
         const requiredOutputCapacity = this.sumCapacity(outputs);
 
@@ -34,7 +34,7 @@ export default class TxGeneratorService {
     sumCapacity(cells: Cell[]): BigNumber {
         let capacitySum = new BigNumber(0);
         for (let cell of cells) {
-            capacitySum = capacitySum.plus(cell.capacity);
+            capacitySum = capacitySum.plus(cell.getCapacity());
         }
         return capacitySum;
     }

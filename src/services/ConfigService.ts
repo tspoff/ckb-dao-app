@@ -26,6 +26,11 @@ export default class ConfigService {
       return this.getValue(key, true);
     }
 
+    get INDEXER_URI(): string {
+      return process.env.REACT_APP_INDEXER_URI || 'http://127.0.0.1:8080';
+
+    }
+
     get PRIVATE_KEY(): string {
       return process.env.REACT_APP_PRIVATE_KEY || '310e4d6c68f0026499179342f4286bd03a8d510af456d9fe2a31b3f699f0ef05';
     }

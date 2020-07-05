@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import BigNumber from "bignumber.js";
 
 export enum DepType {
     Code = "code",
@@ -28,45 +28,53 @@ export interface CellConstructor {
     data: string;
     out_point?: Outpoint;
 }
-export class Cell {
-    capacity: BigNumber;
+
+interface CellOutput {
+    capacity: string;
     lock: Script | null;
     type: Script | null;
+}
+
+export class Cell {
+    block_header?: string;
+    block_number?: string;
+    cell_output: CellOutput;
     data: string;
     out_point?: Outpoint;
-    constructor(args: CellConstructor) {
-        const {capacity, lock, type, data, out_point} = args;
-        this.capacity = capacity;
-        this.lock = lock;
-        this.type = type;
+    constructor(cell) {
+        const {block_header, block_number, capacity, lock, type, out_point, data} = cell;
+
+        //TODO: Input validation
+        // Store capacity as BigNumber?
+
         this.data = data;
-        if (out_point) {
-            this.out_point = out_point;
-        }
+        this.cell_output = {
+            capacity: capacity,
+            lock: lock,
+            type: type
+        };
+
+        if (block_header) this.block_header = block_header;
+        if (block_number) this.block_number = block_number;
+        if (out_point) this.out_point = out_point;
+    }
+
+    getCapacity(): BigNumber {
+        return new BigNumber(this.cell_output.capacity);
     }
 
     static fromJsonObject(jsonCell) {
         return new Cell(
             {
-                capacity: new BigNumber(jsonCell.cell_output.capacity),
+                block_header: jsonCell.block_header,
+                block_number: jsonCell.block_number,
+                capacity: jsonCell.cell_output.capacity,
                 lock: jsonCell.cell_output.lock,
                 type: jsonCell.cell_output.type,
                 data: jsonCell.data,
                 out_point: jsonCell.out_point
             }
         );
-    }
-
-    serializeJson() {
-        console.log('capacity check',
-        {
-            decimal: this.capacity.toString(),
-            hex: this.capacity.toString(16)
-        });
-        return {
-            capacity: this.capacity.toString(16),
-
-        }
     }
 }
 
