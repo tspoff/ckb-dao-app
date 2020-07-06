@@ -45,11 +45,11 @@ export class Cell {
         const {block_header, block_number, capacity, lock, type, out_point, data} = cell;
 
         //TODO: Input validation
-        // Store capacity as BigNumber?
+        // Store capacity as BigNumber? Avoiding for now for ease of serialization
 
         this.data = data;
         this.cell_output = {
-            capacity: capacity,
+            capacity,
             lock: lock,
             type: type
         };

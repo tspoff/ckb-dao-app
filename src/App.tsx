@@ -6,6 +6,7 @@ import "./App.css";
 import ProposalFeed from "./components/proposal/ProposalFeed";
 import CreateProposalForm from "./components/CreateProposalForm";
 import Header from "./components/Header";
+import WalletModal from "./components/WalletModal";
 
 const Container = styled.div`
   display: flex;
@@ -17,6 +18,7 @@ function App() {
     <div className="App">
       <div className="app-shell">
         <Header />
+        <WalletModal/>
         <Container>
           <HashRouter>
             <Switch>

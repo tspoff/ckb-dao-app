@@ -7,12 +7,14 @@ import Modal from "src/components/common/Modal";
 
 const WalletModal = observer(() => {
   const {
-    root: { ckbTransferService, walletService, codeLibraryService },
+    root: { walletModalStore, ckbTransferService, walletService, codeLibraryService },
   } = useServices();
+  
+  let visible = walletModalStore.isVisible;
 
-  const {
-    root: { walletModalStore },
-  } = useStores();
+  const dismissModal = () => {
+    walletModalStore.setVisible(false);
+  }
 
   let walletText = {
     privateKey: "-",
@@ -34,13 +36,14 @@ const WalletModal = observer(() => {
     walletText.balance = ckbTransferService.isBalanceLoaded(lockHash) ? ckbTransferService.getBalance(lockHash).toString() : "-";
   }
 
+  console.log('Modal Render', visible);
+
   //@ts-ignore
   return (
+    <div>
     <Modal
-      isOpen={walletModalStore.isVisible}
-      onDismiss={walletModalStore.setVisible(false)}
-      minHeight={null}
-      maxHeight={90}
+      onDismiss={dismissModal}
+      visible={visible}
     >
       <div>
       <p>PrivateKey: {walletText.privateKey}</p>
@@ -49,6 +52,7 @@ const WalletModal = observer(() => {
       <p>PubKeyHash: {walletText.pubKeyHash}</p>
       </div>
     </Modal>
+    </div>
   );
 });
 export default WalletModal;

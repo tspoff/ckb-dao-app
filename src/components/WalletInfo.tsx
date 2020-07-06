@@ -3,21 +3,20 @@ import styled from "styled-components";
 import { observer } from "mobx-react";
 import { useServices } from "../contexts/ServicesContext";
 import { Row, Col } from "./common/Grid";
-import CreateProposal from "./CreateProposalForm";
 
 const Wrapper = styled.div`
   width: 100%;
-  padding-top: 8px;
+  padding: 10px;
+  background: #73AD21;
+  border-radius: 25px;
+  border: 2px;
 `;
 
-const Header = styled.div`
-  width: 100%;
-  padding-top: 8px;
-`;
+const WalletPanel = styled.div``;
 
 const WalletInfo = observer(() => {
   const {
-    root: { ckbTransferService, walletService, codeLibraryService },
+    root: { walletModalStore, ckbTransferService, walletService, codeLibraryService },
   } = useServices();
 
   let walletText = {
@@ -27,6 +26,10 @@ const WalletInfo = observer(() => {
     pubKeyHash: "-",
     balance: "-",
   };
+
+  const openWalletModal = () => {
+    walletModalStore.setVisible(true);
+  }
 
   if (walletService.hasActiveWallet) {
     walletText.privateKey = walletService.getPrivateKey();
@@ -42,12 +45,7 @@ const WalletInfo = observer(() => {
 
   return (  
     <Wrapper>
-      <Header>
-        <Row>
-          <Col size={2}>{walletText.balance} CKB</Col>
-          <Col size={3}> {walletText.address}</Col>
-        </Row>
-      </Header>
+          <WalletPanel onClick={openWalletModal}> {walletText.address}</WalletPanel>
     </Wrapper>
   );
 });
