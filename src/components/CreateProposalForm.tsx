@@ -58,15 +58,14 @@ const CreateProposalForm = observer(() => {
     //Input validation
 
     const proposal: DAOProposal = {
-      inputs: [],
-      outputs: [],
+      proposalId: '4',
+      amount: new BigNumber(amount),
+      recipientAddress: recipientAddress,
+      recipientLockHash: null,
+      recipientTypeHash: null,
       metadata: {
         title: proposalTitle,
         body: proposalText,
-        amount: new BigNumber(amount),
-        recipientAddress: recipientAddress,
-        recipientLockHash: null,
-        recipientTypeHash: null,
       },
     };
 

@@ -48,13 +48,13 @@ const ProposalCard = observer((props: Props) => {
         </Row>
         <Row>
         <Col size={2}>
-            <p>{proposal.metadata.amount.toString()}</p>
+            <p>{proposal.amount.toString()}</p>
           </Col>
           <Col size={1}>
             ->
           </Col>
           <Col size={3}>
-            <p>{proposal.metadata.recipientAddress}</p>
+            <p>{proposal.recipientAddress}</p>
           </Col>
         </Row>
         <Row>

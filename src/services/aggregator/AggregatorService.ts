@@ -1,7 +1,6 @@
 
 /* Store proposals and signatures for DAO */
 
-import { Cell } from "src/ckb-helpers";
 import BigNumber from "bignumber.js";
 import RootStore from "src/stores/RootStore";
 import { action, observable } from "mobx";
@@ -9,13 +8,12 @@ import { ckbHash } from "src/ckb-helpers/utils";
 import { sampleProposals } from "./sampleProposals";
 
 export interface DAOProposal {
-    inputs?: Cell[],
-    outputs?: Cell[],
+    proposalId: string;
+    amount: BigNumber;
+    recipientLockHash: string | null;
+    recipientTypeHash: string | null;
+    recipientAddress: string;
     metadata: {
-        amount: BigNumber;
-        recipientLockHash: string | null;
-        recipientTypeHash: string | null;
-        recipientAddress: string;
         title: string;
         body: string;
     }
@@ -38,18 +36,21 @@ export default class AggregatorService {
         this.proposals = sampleProposals;
     }
 
+    //TODO: Identify proposals by HASH on the on-chain data
     @action addProposal(proposal: DAOProposal) {
-        const proposalHash = ckbHash(proposal);
-        this.proposals[proposalHash] = proposal;
+        if (!proposal.signatures) proposal.signatures = [];
+        if (!proposal.tags) proposal.tags = [];
+
+        this.proposals[proposal.proposalId] = proposal;
     }
 
-    @action addSignature(signature: string, proposalHash: string) {
-        this.verifyProposalExists(proposalHash);
-        this.proposals[proposalHash].signatures.push(signature);
+    @action addSignature(signature: string, proposalId: string) {
+        this.verifyProposalExists(proposalId);
+        this.proposals[proposalId].signatures.push(signature);
     }
 
-    private verifyProposalExists(proposalHash) {
-         if (!this.proposals[proposalHash]) {
+    private verifyProposalExists(proposalId) {
+         if (!this.proposals[proposalId]) {
             throw new Error('Attempting to add signature for untracked proposal');
          }
     }
