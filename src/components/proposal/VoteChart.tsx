@@ -13,7 +13,7 @@ interface Props {
 const VoteChart = observer((props: Props) => {
     const {proposal} = props;
     const requiredVoteTreshold = new BigNumber(1000000);
-    const currentVoteThreshold = proposal.signatures.length > 0 ? new BigNumber(600000) : new BigNumber(0);
+    const currentVoteThreshold = proposal.signatures.length > 0 ? new BigNumber(1000000) : new BigNumber(0);
     const currentPercentage = currentVoteThreshold.div(requiredVoteTreshold).times(100);
     const remainingPercentage = new BigNumber(100).minus(currentPercentage);
 

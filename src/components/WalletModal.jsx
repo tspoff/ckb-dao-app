@@ -34,7 +34,10 @@ const WalletModal = observer(() => {
       signatures.push(walletService.sign(ckbHashString(witness.message)));
     }
 
-    await aggregatorService.addSignatures(proposalId, signatures);
+    aggregatorService.addSignatures(proposalId, signatures).then(response => {
+      aggregatorService.sendProposal(proposalId);
+    });
+    walletModalStore.setVisible(false);
   };
 
   let walletText = {
@@ -74,7 +77,7 @@ const WalletModal = observer(() => {
     return (
       <div>
         <p>Message to Sign</p>
-        <button onClick={signProposal}>Sign</button>
+        <button onClick={signProposal}>Accept</button>
       </div>
     );
   };

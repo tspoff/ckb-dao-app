@@ -65,6 +65,7 @@ export default class AggregatorService {
     });
 
     console.log(response.data);
+    this.fetchProposals();
     return response.data;
   }
 
@@ -74,6 +75,14 @@ export default class AggregatorService {
         proposalId,
         signatures
       }); 
+      this.fetchProposals();
+  }
+
+  @action async sendProposal(proposalId: string) {
+    await axios.post(`${this.aggregatorURI}/send-proposal`, {
+        proposalId,
+      }); 
+      this.fetchProposals();
   }
 
   private verifyProposalExists(proposalId) {
