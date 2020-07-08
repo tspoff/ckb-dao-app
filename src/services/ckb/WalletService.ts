@@ -2,8 +2,9 @@ import { action, observable } from "mobx";
 import RootStore from "../../stores/RootStore";
 import { Script } from "../../ckb-helpers";
 import { KnownCodeLibs } from "./CodeLibraryService";
-import { ckbHash, scriptToHash } from "src/ckb-helpers/utils";
+import { ckbHash, scriptToHash, str2ab, secpSign, arrayBufferToHex } from "src/ckb-helpers/utils";
 import Address from "src/ckb-helpers/Address";
+import secp256k1 from 'secp256k1';
 
 interface Wallet {
   privateKey: string;
@@ -27,9 +28,8 @@ export default class WalletService {
     this.hasActiveWallet = true;
   }
 
-  //TODO: How to serialize the TX properly for signing?
-  sign(data: any): string {
-    return "";
+  sign(message: any) {
+    return arrayBufferToHex(secpSign('0x' + this.getPrivateKey(), message).toArrayBuffer());
   }
 
   getPrivateKey() {
@@ -57,7 +57,7 @@ export default class WalletService {
     return {
       code_hash: codeLibraryService.getCodeHash(KnownCodeLibs.Secp256k1),
       hash_type: codeLibraryService.getHashType(KnownCodeLibs.Secp256k1),
-      args: this.getPubKeyHash(),
+      args: "0x27fe447b532a2cc8282aa655dec3077b7e5d83a0",
     };
   }
 }

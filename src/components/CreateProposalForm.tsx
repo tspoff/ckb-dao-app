@@ -58,15 +58,16 @@ const CreateProposalForm = observer(() => {
     //Input validation
 
     const proposal: DAOProposal = {
-      proposalId: '4',
-      amount: new BigNumber(amount),
+      daoId: BigInt(0).toString(),
+      amount: BigInt(amount).toString(),
       recipientAddress: recipientAddress,
-      recipientLockHash: null,
-      recipientTypeHash: null,
       metadata: {
         title: proposalTitle,
         body: proposalText,
       },
+      signatures: [],
+      tags: ["#funding"],
+      txSkeleton: {}
     };
 
     aggregatorService.addProposal(proposal);

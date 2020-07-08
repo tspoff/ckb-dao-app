@@ -12,9 +12,9 @@ const Wrapper = styled.div`
   border: 2px;
 `;
 
-const WalletPanel = styled.div``;
+const Panel = styled.div``;
 
-const WalletInfo = observer(() => {
+const WalletPanel = observer(() => {
   const {
     root: { walletModalStore, ckbTransferService, walletService, codeLibraryService },
   } = useServices();
@@ -45,9 +45,9 @@ const WalletInfo = observer(() => {
 
   return (  
     <Wrapper>
-          <WalletPanel onClick={openWalletModal}> {walletText.address}</WalletPanel>
+          <Panel onClick={openWalletModal}> {walletText.address}</Panel>
     </Wrapper>
   );
 });
 
-export default WalletInfo;
+export default WalletPanel;

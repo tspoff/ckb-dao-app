@@ -1,20 +1,41 @@
 import React from "react";
 import styled from "styled-components";
+import { toJS } from "mobx";
 import { observer } from "mobx-react";
-import { useStores } from "src/contexts/StoresContext";
 import { useServices } from "src/contexts/ServicesContext";
 import Modal from "src/components/common/Modal";
+import { ckbHashString } from "src/ckb-helpers/utils";
 
 const WalletModal = observer(() => {
   const {
-    root: { walletModalStore, ckbTransferService, walletService, codeLibraryService },
+    root: {
+      walletModalStore,
+      ckbTransferService,
+      walletService,
+      codeLibraryService,
+      aggregatorService
+    },
   } = useServices();
-  
-  let visible = walletModalStore.isVisible;
+
+  const visible = walletModalStore.isVisible;
+  const activePanel = walletModalStore.activePanel;
 
   const dismissModal = () => {
     walletModalStore.setVisible(false);
-  }
+  };
+
+  const signProposal = async () => {
+    const {txSkeleton, proposalId} = walletModalStore.signingRequest.metadata;
+    console.log('signProposal', toJS(walletModalStore.signingRequest));
+
+    const signatures = [];
+
+    for (let witness of txSkeleton["signingEntries"]) {
+      signatures.push(walletService.sign(ckbHashString(witness.message)));
+    }
+
+    await aggregatorService.addSignatures(proposalId, signatures);
+  };
 
   let walletText = {
     privateKey: "-",
@@ -33,25 +54,39 @@ const WalletModal = observer(() => {
 
   if (codeLibraryService.codeLibsLoaded && walletService.hasActiveWallet) {
     const lockHash = walletService.getLockHash();
-    walletText.balance = ckbTransferService.isBalanceLoaded(lockHash) ? ckbTransferService.getBalance(lockHash).toString() : "-";
+    walletText.balance = ckbTransferService.isBalanceLoaded(lockHash)
+      ? ckbTransferService.getBalance(lockHash).toString()
+      : "-";
   }
 
-  console.log('Modal Render', visible);
+  const renderWalletInfoPanel = () => {
+    return (
+      <div>
+        <p>PrivateKey: {walletText.privateKey}</p>
+        <p>PublicKey: {walletText.publicKey}</p>
+        <p>Address: {walletText.address}</p>
+        <p>PubKeyHash: {walletText.pubKeyHash}</p>
+      </div>
+    );
+  };
+
+  const renderWalletSignPanel = () => {
+    return (
+      <div>
+        <p>Message to Sign</p>
+        <button onClick={signProposal}>Sign</button>
+      </div>
+    );
+  };
+
+  console.log("Modal Render", visible);
 
   //@ts-ignore
   return (
     <div>
-    <Modal
-      onDismiss={dismissModal}
-      visible={visible}
-    >
-      <div>
-      <p>PrivateKey: {walletText.privateKey}</p>
-      <p>PublicKey: {walletText.publicKey}</p>
-      <p>Address: {walletText.address}</p>
-      <p>PubKeyHash: {walletText.pubKeyHash}</p>
-      </div>
-    </Modal>
+      <Modal onDismiss={dismissModal} visible={visible}>
+        {activePanel === 0 ? renderWalletInfoPanel() : renderWalletSignPanel()}
+      </Modal>
     </div>
   );
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import WalletInfo from './WalletInfo';
+import WalletInfo from './WalletPanel';
 
 const HeaderFrame = styled.div`
     display: flex;

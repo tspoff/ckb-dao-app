@@ -1,13 +1,17 @@
 import secp256k1 from "secp256k1";
-import { Reader, normalizers, validators } from "ckb-js-toolkit";
+import { Reader, normalizers } from "ckb-js-toolkit";
 import { Hasher } from "ckb-js-toolkit-contrib/src/hasher";
-import Script from "src/services/ckb/TxGeneratorService";
 import * as blockchain from "ckb-js-toolkit-contrib/src/blockchain.js";
 
 export function ckbHash(buffer) {
   const h = new Hasher();
   h.update(buffer);
   return h.digest();
+}
+
+export function ckbHashString(buffer) {
+  const hash = ckbHash(buffer);
+  return new Reader(hash.toArrayBuffer()).serializeJson();
 }
 
 export function publicKeyHash(privateKey) {
@@ -31,27 +35,27 @@ export function secpSign(privateKey, message) {
 
 const byteToHex = [];
 
-for (let n = 0; n <= 0xff; ++n)
-{
-    const hexOctet = n.toString(16).padStart(2, "0");
-    byteToHex.push(hexOctet);
+for (let n = 0; n <= 0xff; ++n) {
+  const hexOctet = n.toString(16).padStart(2, "0");
+  byteToHex.push(hexOctet);
 }
 
-export function arrayBufferToHex(arrayBuffer)
-{
-    const buff = new Uint8Array(arrayBuffer);
-    const hexOctets = []; // new Array(buff.length) is even faster (preallocates necessary array size), then use hexOctets[i] instead of .push()
+export function arrayBufferToHex(arrayBuffer) {
+  const buff = new Uint8Array(arrayBuffer);
+  const hexOctets = []; // new Array(buff.length) is even faster (preallocates necessary array size), then use hexOctets[i] instead of .push()
 
-    for (let i = 0; i < buff.length; ++i)
-        hexOctets.push(byteToHex[buff[i]]);
+  for (let i = 0; i < buff.length; ++i) hexOctets.push(byteToHex[buff[i]]);
 
-    return "0x" + hexOctets.join("");
+  return "0x" + hexOctets.join("");
 }
 
 export function scriptToHash(script) {
   return arrayBufferToHex(
-    ckbHash(
-      blockchain.SerializeScript(normalizers.NormalizeScript(script))
-    ).view.buffer
+    ckbHash(blockchain.SerializeScript(normalizers.NormalizeScript(script)))
+      .view.buffer
   );
+}
+
+export function str2ab(text) {
+  return new TextEncoder().encode(text);
 }
