@@ -47,7 +47,7 @@ export default class Address {
   };
 
   public getBlake160 = () => {
-    return '0x' + ckbUtils.blake160('0x' + this.publicKey, 'hex');
+    return '0x' + ckbUtils.blake160(this.publicKey, 'hex');
   };
 
   public getPublicKeyHash = () => {

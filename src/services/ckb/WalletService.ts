@@ -57,7 +57,7 @@ export default class WalletService {
     return {
       code_hash: codeLibraryService.getCodeHash(KnownCodeLibs.Secp256k1),
       hash_type: codeLibraryService.getHashType(KnownCodeLibs.Secp256k1),
-      args: "0x27fe447b532a2cc8282aa655dec3077b7e5d83a0",
+      args: this.getPubKeyHash(),
     };
   }
 }
