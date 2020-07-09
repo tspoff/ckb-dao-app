@@ -7,7 +7,8 @@ const HeaderFrame = styled.div`
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    background-color: var(--panel-background);
+    color: var(--header-text);
+    background-color: var(--header-background);
     border-bottom: 1px solid var(--panel-border);
 `;
 

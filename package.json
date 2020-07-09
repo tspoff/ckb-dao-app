@@ -4,6 +4,11 @@
   "private": true,
   "dependencies": {
     "@ckb-lumos/types": "^0.3.0",
+    "@emeraldpay/hashicon": "^0.4.0",
+    "@emeraldpay/hashicon-react": "^0.4.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.29",
+    "@fortawesome/free-solid-svg-icons": "^5.13.1",
+    "@fortawesome/react-fontawesome": "^0.1.11",
     "@nervosnetwork/ckb-sdk-core": "^0.33.0",
     "@reach/dialog": "^0.10.5",
     "@testing-library/jest-dom": "^4.2.4",

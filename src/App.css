@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
-.App {
-  text-align: center;
+body, html {
+  height: calc(100vh);
 }
 
 .App-logo {
@@ -41,7 +41,7 @@
 
 :root {
   /* General Styles */
-  --background: #21222c;
+  --background: #222526;
   --body-text: #90a4ae;
   --exit-modal-color: #dfe3e9;
   --error-color: #ff8a80;
@@ -53,6 +53,12 @@
   --token-balance-text: #90a4ae;
   --warning: #ff8a80;
   --address-color: #82b1ff;
+
+  --header-background: #030506;
+  --content-background: #181a1b;
+  --content-border: #444444;
+  --content-primary-text: #E8E6E3;
+  --content-secondary-text: #9d9488;
 
   /* Input Fields */
   --input-text: #fafafa;
@@ -97,9 +103,9 @@
 .app-shell {
   margin: 0 auto;
   text-align: center;
-  max-width: 1200px;
   background-color: var(--background);
-  overflow: scroll;
+  width: 100%;
+  height: calc(100vh);
 }
 
 .popup-content {

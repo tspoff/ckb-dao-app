@@ -11,6 +11,13 @@ import WalletModal from "./components/WalletModal";
 const Container = styled.div`
   display: flex;
   flex-direction: row;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const ContentWrapper = styled.div`
+  margin: 0 auto;
 `;
 
 function App() {
@@ -20,6 +27,7 @@ function App() {
         <Header />
         <WalletModal/>
         <Container>
+          <ContentWrapper>
           <HashRouter>
             <Switch>
               <Route path="/create" component={CreateProposalForm} />
@@ -27,6 +35,7 @@ function App() {
               <Redirect from="/" to="/feed" />
             </Switch>
           </HashRouter>
+          </ContentWrapper>
         </Container>
       </div>
     </div>

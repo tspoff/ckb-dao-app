@@ -4,6 +4,9 @@ import { observer } from "mobx-react";
 import { Row, Col } from "../common/Grid";
 import VotePanel from "./VotePanel";
 import { DAOProposal } from "src/services/aggregator/AggregatorService";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import AddressPillbox from "../AddressPillbox";
 
 interface Props {
   proposal: DAOProposal;
@@ -12,25 +15,48 @@ interface Props {
 const CardContainer = styled.div`
   font: var(--montserrat);
   display: flex;
-  flex-direction: row;
-  border: 5px;
-  background: blue;
+  flex-direction: column;
+  background: var(--content-background);
   margin: 10px;
-  border-radius: 25px;
+  border: 1px;
+  color: var(--content-primary-text);
+  border-radius: 10px;
+  border-style: solid;
+  border-color: var(--content-border);
   min-height: 200px;
-  width: 90%;
+`;
+
+const TitleRow = styled(Row)`
+  border-bottom: 1px solid var(--content-border);
 `;
 
 const Title = styled.h3`
   font: Montserrat;
   font-size: 16px;
   text-align: center;
+  padding: 5px;
   margin: 5px;
 `;
 
-const SummaryWrapper = styled.div`
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+`;
+
+const SummaryPanelWrapper = styled.div`
+  width: calc(100% - 150px);
   display: flex;
   flex-direction: column;
+`;
+
+const RecipientRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const RecipientRowItem = styled.div`
+  margin: auto;
 `;
 
 const VotePanelWrapper = styled.div`
@@ -42,28 +68,28 @@ const ProposalCard = observer((props: Props) => {
 
   return (
     <CardContainer>
-      <SummaryWrapper>
-        <Row>
-          <Title>{proposal.metadata.title}</Title>
-        </Row>
-        <Row>
-        <Col size={2}>
-            <p>{proposal.amount.toString()}</p>
-          </Col>
-          <Col size={1}>
-            ->
-          </Col>
-          <Col size={3}>
-            <p>{proposal.recipientAddress}</p>
-          </Col>
-        </Row>
-        <Row>
-          <p>{proposal.metadata.body}</p>
-        </Row>
-      </SummaryWrapper>
-      <VotePanelWrapper>
-        <VotePanel proposal={proposal} />
-      </VotePanelWrapper>
+      <TitleRow>
+        <Title>{proposal.metadata.title}</Title>
+      </TitleRow>
+      <ContentWrapper>
+        <SummaryPanelWrapper>
+          <RecipientRow>
+            <RecipientRowItem>{proposal.amount.toString()}</RecipientRowItem>
+            <RecipientRowItem>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </RecipientRowItem>
+            <RecipientRowItem>
+              <AddressPillbox address={proposal.recipientAddress} />
+            </RecipientRowItem>
+          </RecipientRow>
+          <Row>
+            <p>{proposal.metadata.body}</p>
+          </Row>
+        </SummaryPanelWrapper>
+        <VotePanelWrapper>
+          <VotePanel proposal={proposal} />
+        </VotePanelWrapper>
+      </ContentWrapper>
     </CardContainer>
   );
 });
