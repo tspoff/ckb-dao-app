@@ -20,27 +20,15 @@ const WalletPanel = observer(() => {
   } = useServices();
 
   let walletText = {
-    privateKey: "-",
-    publicKey: "-",
     address: "-",
-    pubKeyHash: "-",
-    balance: "-",
   };
 
   const openWalletModal = () => {
-    walletModalStore.setVisible(true);
+    walletModalStore.showWalletInfo();
   }
 
   if (walletService.hasActiveWallet) {
-    walletText.privateKey = walletService.getPrivateKey();
-    walletText.publicKey = walletService.getPublicKey();
     walletText.address = walletService.getAddress();
-    walletText.pubKeyHash = walletService.getPubKeyHash();
-  }
-
-  if (codeLibraryService.codeLibsLoaded && walletService.hasActiveWallet) {
-    const lockHash = walletService.getLockHash();
-    walletText.balance = ckbTransferService.isBalanceLoaded(lockHash) ? ckbTransferService.getBalance(lockHash).toString() : "-";
   }
 
   return (  

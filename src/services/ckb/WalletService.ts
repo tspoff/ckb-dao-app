@@ -4,7 +4,6 @@ import { Script } from "../../ckb-helpers";
 import { KnownCodeLibs } from "./CodeLibraryService";
 import { ckbHash, scriptToHash, str2ab, secpSign, arrayBufferToHex } from "src/ckb-helpers/utils";
 import Address from "src/ckb-helpers/Address";
-import secp256k1 from 'secp256k1';
 
 interface Wallet {
   privateKey: string;

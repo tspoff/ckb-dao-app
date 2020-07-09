@@ -4,7 +4,6 @@ import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import { useServices } from "src/contexts/ServicesContext";
 import Modal from "src/components/common/Modal";
-import { ckbHashString } from "src/ckb-helpers/utils";
 
 const WalletModal = observer(() => {
   const {
@@ -31,7 +30,7 @@ const WalletModal = observer(() => {
     const signatures = [];
 
     for (let witness of txSkeleton["signingEntries"]) {
-      signatures.push(walletService.sign(ckbHashString(witness.message)));
+      signatures.push(walletService.sign(witness.message));
     }
 
     aggregatorService.addSignatures(proposalId, signatures).then(response => {
@@ -45,6 +44,7 @@ const WalletModal = observer(() => {
     publicKey: "-",
     address: "-",
     pubKeyHash: "-",
+    lockHash: "-",
     balance: "-",
   };
 
@@ -57,6 +57,8 @@ const WalletModal = observer(() => {
 
   if (codeLibraryService.codeLibsLoaded && walletService.hasActiveWallet) {
     const lockHash = walletService.getLockHash();
+    walletText.lockHash = lockHash;
+
     walletText.balance = ckbTransferService.isBalanceLoaded(lockHash)
       ? ckbTransferService.getBalance(lockHash).toString()
       : "-";
@@ -69,6 +71,10 @@ const WalletModal = observer(() => {
         <p>PublicKey: {walletText.publicKey}</p>
         <p>Address: {walletText.address}</p>
         <p>PubKeyHash: {walletText.pubKeyHash}</p>
+        <p>LockHash: {walletText.lockHash}</p>
+        <br/>
+        <p>Balance: {walletText.balance}</p>
+
       </div>
     );
   };

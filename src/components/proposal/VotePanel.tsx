@@ -31,7 +31,6 @@ const VotePanel = observer((props: Props) => {
 
   const handleVote = async (event) => {
     console.log('handleVote');
-    walletModalStore.setVisible(true);
     walletModalStore.showSignatureRequest({
       type: SigningRequestType.DAO_PROPOSAL,
       metadata: proposal,

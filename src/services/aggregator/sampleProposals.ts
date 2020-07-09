@@ -3,7 +3,7 @@ import { DAOProposalMap } from "./AggregatorService";
 export const sampleProposals: DAOProposalMap = {
   "0": {
     daoId: '0',
-    amount: BigInt(1000000).toString(),
+    amount: BigInt(9000000000).toString(),
     recipientAddress: "ckt1qyq93ytst2ax2j9z53utjq0srnndxw5cd3sqer8pkt",
     metadata: {
       title: "Marketing Proposal",
@@ -16,7 +16,7 @@ export const sampleProposals: DAOProposalMap = {
   },
   "1": {
     daoId: '0',
-    amount: BigInt(2000000).toString(),
+    amount: BigInt(8000000000).toString(),
     recipientAddress: "ckt1qyq93ytst2ax2j9z53utjq0srnndxw5cd3sqer8pkt",
     metadata: {
       title: "Development Proposal",

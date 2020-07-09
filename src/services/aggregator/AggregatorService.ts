@@ -36,7 +36,7 @@ export default class AggregatorService {
 
   constructor(rootStore: RootStore, aggregatorURI: string) {
     this.daoId = BigInt(0);
-    this.defaultProposalTxFee = BigInt(100000000);
+    this.defaultProposalTxFee = BigInt(10000);
     this.rootStore = rootStore;
     this.proposals = {} as DAOProposalMap;
     this.aggregatorURI = aggregatorURI;
@@ -79,9 +79,10 @@ export default class AggregatorService {
   }
 
   @action async sendProposal(proposalId: string) {
-    await axios.post(`${this.aggregatorURI}/send-proposal`, {
+    const response = await axios.post(`${this.aggregatorURI}/send-proposal`, {
         proposalId,
       }); 
+      console.log('sendProposal', {proposalId, response: response.data});
       this.fetchProposals();
   }
 

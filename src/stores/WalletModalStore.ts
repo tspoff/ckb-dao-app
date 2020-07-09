@@ -37,13 +37,13 @@ export default class WalletModalStore {
     }
     
     @action showWalletInfo() {
-        this.setVisible(true);
         this.setActivePanel(WalletModalPanels.INFO);
+        this.setVisible(true);
     }
 
     @action showSignatureRequest(signingRequest: SigningRequest) {
         this.signingRequest = signingRequest;
-        this.setVisible(true);
         this.setActivePanel(WalletModalPanels.SIGN);
+        this.setVisible(true);
     }
 }
