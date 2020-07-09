@@ -6,7 +6,8 @@ import VotePanel from "./VotePanel";
 import { DAOProposal } from "src/services/aggregator/AggregatorService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import AddressPillbox from "../AddressPillbox";
+import AddressView from "../AddressView";
+import CkbValue from "../common/CkbValue";
 
 interface Props {
   proposal: DAOProposal;
@@ -53,10 +54,11 @@ const SummaryPanelWrapper = styled.div`
 const RecipientRow = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
 `;
 
 const RecipientRowItem = styled.div`
-  margin: auto;
+  margin: auto 10px;
 `;
 
 const VotePanelWrapper = styled.div`
@@ -74,12 +76,14 @@ const ProposalCard = observer((props: Props) => {
       <ContentWrapper>
         <SummaryPanelWrapper>
           <RecipientRow>
-            <RecipientRowItem>{proposal.amount.toString()}</RecipientRowItem>
+            <RecipientRowItem>
+              <CkbValue amount={proposal.amount} />
+            </RecipientRowItem>
             <RecipientRowItem>
               <FontAwesomeIcon icon={faArrowRight} />
             </RecipientRowItem>
             <RecipientRowItem>
-              <AddressPillbox address={proposal.recipientAddress} />
+              <AddressView address={proposal.recipientAddress} />
             </RecipientRowItem>
           </RecipientRow>
           <Row>

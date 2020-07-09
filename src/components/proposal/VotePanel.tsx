@@ -1,14 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react";
-import { useStores } from "src/contexts/StoresContext";
 import { useServices } from "src/contexts/ServicesContext";
-import BigNumber from "bignumber.js";
-import Chart from "chart.js";
 import { DAOProposal } from "src/services/aggregator/AggregatorService";
 import VoteChart from "./VoteChart";
-import { ckbHash } from "src/ckb-helpers/utils";
 import { SigningRequestType } from "src/stores/WalletModalStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faVoteYea } from "@fortawesome/free-solid-svg-icons";
 
 const VoteButton = styled.button`
   background: beige;
@@ -43,7 +41,8 @@ const VotePanel = observer((props: Props) => {
   return (
     <div>
       <VoteChart proposal={proposal} />
-      <VoteButton onClick={handleVote}>Vote Yes</VoteButton>
+      <VoteButton onClick={handleVote}>Vote Yes <FontAwesomeIcon icon={faVoteYea} />
+</VoteButton>
     </div>
   );
 });
