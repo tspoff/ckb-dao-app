@@ -8,6 +8,7 @@ export const Grid = styled.div``;
 
 export const Row = styled.div`
     display: flex;
+    width: 100%;
 `;
 
 export const CenteredRow = styled(Row)`

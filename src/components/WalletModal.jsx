@@ -2,8 +2,47 @@ import React from "react";
 import styled from "styled-components";
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
+import JSONPretty from "react-json-pretty";
+import { Row, CenteredCol } from "./common/Grid";
 import { useServices } from "src/contexts/ServicesContext";
 import Modal from "src/components/common/Modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faTimes, faFileSignature } from "@fortawesome/free-solid-svg-icons";
+import { WalletModalPanels } from "src/stores/WalletModalStore";
+import AddressView from "./AddressView";
+import CkbTransfer from "./common/CkbTransfer";
+import JSONPrettyMon from "react-json-pretty/dist/monikai";
+import ActionButton from "./common/ActionButton";
+
+const ModalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const HeaderRow = styled(Row)`
+  margin: auto;
+  padding: 10px;
+  padding-top: 20px;
+  justify-content: space-between;
+`;
+
+const ContentRow = styled(Row)`
+  margin: auto;
+  padding: 10px;
+`;
+
+const ContentCentered = styled.div`
+  text-align: center;
+  margin: auto;
+`;
+
+const JsonWrapper = styled.div`
+  text-align: left;
+  max-height: 400px;
+  max-width: 80vh;
+  margin: auto;
+  overflow: scroll;
+`;
 
 const WalletModal = observer(() => {
   const {
@@ -12,7 +51,7 @@ const WalletModal = observer(() => {
       ckbTransferService,
       walletService,
       codeLibraryService,
-      aggregatorService
+      aggregatorService,
     },
   } = useServices();
 
@@ -24,8 +63,8 @@ const WalletModal = observer(() => {
   };
 
   const signProposal = async () => {
-    const {txSkeleton, proposalId} = walletModalStore.signingRequest.metadata;
-    console.log('signProposal', toJS(walletModalStore.signingRequest));
+    const { txSkeleton, proposalId } = walletModalStore.signingRequest.metadata;
+    console.log("signProposal", toJS(walletModalStore.signingRequest));
 
     const signatures = [];
 
@@ -33,7 +72,7 @@ const WalletModal = observer(() => {
       signatures.push(walletService.sign(witness.message));
     }
 
-    aggregatorService.addSignatures(proposalId, signatures).then(response => {
+    aggregatorService.addSignatures(proposalId, signatures).then((response) => {
       aggregatorService.sendProposal(proposalId);
     });
     walletModalStore.setVisible(false);
@@ -46,6 +85,7 @@ const WalletModal = observer(() => {
     pubKeyHash: "-",
     lockHash: "-",
     balance: "-",
+    title: "-",
   };
 
   if (walletService.hasActiveWallet) {
@@ -53,6 +93,7 @@ const WalletModal = observer(() => {
     walletText.publicKey = walletService.getPublicKey();
     walletText.address = walletService.getAddress();
     walletText.pubKeyHash = walletService.getPubKeyHash();
+    walletText.title = walletModalStore.getModalTitle();
   }
 
   if (codeLibraryService.codeLibsLoaded && walletService.hasActiveWallet) {
@@ -64,39 +105,97 @@ const WalletModal = observer(() => {
       : "-";
   }
 
+  const showBackArrow = () => {
+    switch (walletModalStore.activePanel) {
+      case WalletModalPanels.SIGN:
+        return false;
+      case WalletModalPanels.INFO:
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const renderActivePanel = () => {
+    switch (walletModalStore.activePanel) {
+      case WalletModalPanels.SIGN:
+        return renderWalletSignPanel();
+      case WalletModalPanels.INFO:
+        return renderWalletInfoPanel();
+      default:
+        return renderWalletInfoPanel();
+    }
+  };
+
   const renderWalletInfoPanel = () => {
     return (
       <div>
+        <AddressView address={walletText.address} />
         <p>PrivateKey: {walletText.privateKey}</p>
         <p>PublicKey: {walletText.publicKey}</p>
         <p>Address: {walletText.address}</p>
         <p>PubKeyHash: {walletText.pubKeyHash}</p>
         <p>LockHash: {walletText.lockHash}</p>
-        <br/>
+        <br />
         <p>Balance: {walletText.balance}</p>
-
       </div>
     );
   };
 
   const renderWalletSignPanel = () => {
+    const proposal = walletModalStore.signingRequest.metadata;
     return (
-      <div>
-        <p>Message to Sign</p>
-        <button onClick={signProposal}>Accept</button>
-      </div>
+      <React.Fragment>
+        <ContentRow>
+          <ContentCentered>
+            <p>Transfer CKB</p>
+          </ContentCentered>
+        </ContentRow>
+        <ContentRow>
+          <ContentCentered>
+            <CkbTransfer proposal={proposal} />
+          </ContentCentered>
+        </ContentRow>
+        <ContentRow>
+          <ContentCentered>
+            <p>Transaction Details</p>
+          </ContentCentered>
+        </ContentRow>
+        <ContentRow>
+        <ContentCentered>
+            <JsonWrapper>
+              <JSONPretty
+                data={JSON.stringify(proposal.txSkeleton)}
+                theme={JSONPrettyMon}
+              />
+            </JsonWrapper>
+            </ContentCentered>
+        </ContentRow>
+        <ContentRow>
+          <ContentCentered>
+            <ActionButton onClick={signProposal}>Approve <FontAwesomeIcon icon={faFileSignature}/></ActionButton>
+          </ContentCentered>
+        </ContentRow>
+      </React.Fragment>
     );
   };
 
-  console.log("Modal Render", visible);
-
   //@ts-ignore
   return (
-    <div>
-      <Modal onDismiss={dismissModal} visible={visible}>
-        {activePanel === 0 ? renderWalletInfoPanel() : renderWalletSignPanel()}
-      </Modal>
-    </div>
+    <Modal onDismiss={dismissModal} visible={visible}>
+      <ModalWrapper>
+        <HeaderRow>
+          <CenteredCol size={1}>
+            {showBackArrow() && <FontAwesomeIcon icon={faArrowLeft} />}
+          </CenteredCol>
+          <CenteredCol size={4}>{walletText.title}</CenteredCol>
+          <CenteredCol size={1}>
+            <FontAwesomeIcon onClick={dismissModal} icon={faTimes} />
+          </CenteredCol>
+        </HeaderRow>
+        {renderActivePanel()}
+      </ModalWrapper>
+    </Modal>
   );
 });
 export default WalletModal;

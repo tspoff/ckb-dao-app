@@ -5,7 +5,7 @@ const ModalContainer = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    width:100%;
+    width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
     display: ${props => props.visible ? `block` : `none`};
@@ -13,8 +13,12 @@ const ModalContainer = styled.div`
 
 const ModalBody = styled.section`
     position:fixed;
-    background: white;
+    background: var(--content-background);
+    border: 1px solid var(--content-border);
+    border-radius: 15px;
     width: 80%;
+    max-width: 960px;
+    color: white;
     height: auto;
     top:50%;
     left:50%;
@@ -26,7 +30,6 @@ const Modal = ({ onDismiss, visible, children }) => {
       <ModalContainer visible={visible}>
         <ModalBody>
           {children}
-          <button onClick={onDismiss}>Close</button>
         </ModalBody>
       </ModalContainer>
     );

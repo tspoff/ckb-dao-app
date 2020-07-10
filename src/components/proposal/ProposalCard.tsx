@@ -83,7 +83,7 @@ const ProposalCard = observer((props: Props) => {
               <FontAwesomeIcon icon={faArrowRight} />
             </RecipientRowItem>
             <RecipientRowItem>
-              <AddressView address={proposal.recipientAddress} />
+              <AddressView shorten address={proposal.recipientAddress} />
             </RecipientRowItem>
           </RecipientRow>
           <Row>

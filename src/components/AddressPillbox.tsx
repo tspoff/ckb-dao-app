@@ -3,7 +3,6 @@ import styled from "styled-components";
 import AddressView from "./AddressView";
 
 const Wrapper = styled.div`
-  width: 150px;
   background: var(--content-background);
   padding: 0px 10px;
   border-radius: 10px;
@@ -15,7 +14,7 @@ const Wrapper = styled.div`
 const AddressPillbox = (props) => {
   return (
     <Wrapper onClick={props.onClick}>
-          <AddressView address={props.address}/>
+          <AddressView shorten address={props.address}/>
     </Wrapper>
   );
 };

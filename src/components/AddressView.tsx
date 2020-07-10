@@ -20,7 +20,7 @@ const AddressView = (props) => {
         <Identicon value={props.address} />
       </CenteredCol>
       <CenteredColWithMargin size={4}>
-        <p>{shortenAddress(props.address)}</p>
+        <p>{props.shorten ? shortenAddress(props.address) : props.address}</p>
       </CenteredColWithMargin>
     </Wrapper>
   );
