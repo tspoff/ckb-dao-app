@@ -39,8 +39,6 @@ export default class RootStore {
     async initialize() {
         this.ckbNodeService.initRPC(this.configService.CKB_RPC_ENDPOINT);
         this.walletService.setActiveWallet(this.configService.PRIVATE_KEY);
-        const latestBlock = await this.ckbNodeService.rpc.get_tip_block_number();
-        console.log('latestBlock', latestBlock);
         console.log('Reading code libs');
         await this.codeLibraryService.initializeKnownCodeLibs();
         console.log('Getting balance for user Wallet');

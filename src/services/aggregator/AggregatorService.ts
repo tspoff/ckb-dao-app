@@ -2,7 +2,9 @@
 
 import RootStore from "src/stores/RootStore";
 import { action, observable, toJS } from "mobx";
+import socketIOClient from "socket.io-client";
 const axios = require("axios");
+
 export interface DAOProposal {
   daoId: string;
   amount: string;
@@ -26,11 +28,17 @@ export interface SignatureMap {
   [index: string]: string[];
 }
 
+enum SocketEvents {
+  ADD_PROPOSAL = 'addProposal',
+  ADD_SIGNATUREs = 'addSignatures',
+}
+
 export default class AggregatorService {
   @observable daoId: BigInt;
   @observable proposals: DAOProposalMap;
   @observable signatures: SignatureMap;
   @observable aggregatorURI: string;
+  @observable socketIO: any;
   @observable defaultProposalTxFee: BigInt;
   rootStore: RootStore;
 
@@ -40,7 +48,16 @@ export default class AggregatorService {
     this.rootStore = rootStore;
     this.proposals = {} as DAOProposalMap;
     this.aggregatorURI = aggregatorURI;
+    this.setupSocketClient(aggregatorURI);
   }
+
+  @action setupSocketClient(uri: string) {
+    this.socketIO = socketIOClient(uri);
+
+    this.socketIO.on(SocketEvents.ADD_PROPOSAL, data => {
+      console.log('ADD_PROPOSAL', data);
+    });
+  } 
 
   @action async fetchProposals() {
     const response = await axios.post(`${this.aggregatorURI}/get-proposals`, {
