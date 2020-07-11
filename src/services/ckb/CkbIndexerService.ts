@@ -20,7 +20,7 @@ export default class CkbIndexerService {
           lockScript
         )} hash: ${scriptToHash(lockScript)}`
       );
-      const response = await axios.post(`${this.indexerURI}/get-cells`, {
+      const response = await axios.post(`${this.indexerURI}/indexer/get-cells`, {
         lock: lockScript,
       });
       console.log(response);

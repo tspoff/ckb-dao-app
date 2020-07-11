@@ -65,6 +65,6 @@ export default class WalletModalStore {
       default:
         throw new Error("Invalid active panel value in store");
     }
-    return `Approval Request: ${message}`;
+    return `Signature Request: ${message}`;
   }
 }

@@ -60,7 +60,7 @@ export default class AggregatorService {
   } 
 
   @action async fetchProposals() {
-    const response = await axios.post(`${this.aggregatorURI}/get-proposals`, {
+    const response = await axios.post(`${this.aggregatorURI}/dao/get-proposals`, {
       daoId: this.daoId.toString(),
     });
     this.proposals = response.data;
@@ -69,13 +69,13 @@ export default class AggregatorService {
 
   // Testing function: Proposal tracking will be done by aggregator service once proposals are tracked on decentralized storage.
   @action async clearDatabase() {
-    await axios.post(`${this.aggregatorURI}/clear-database`);
+    await axios.post(`${this.aggregatorURI}/admin/clear-database`);
   }
 
   // Testing function: Proposal tracking will be done by aggregator service once proposals are tracked on decentralized storage.
   @action async addProposal(proposal: DAOProposal) {
     const { walletService } = this.rootStore;
-    const response = await axios.post(`${this.aggregatorURI}/add-proposal`, {
+    const response = await axios.post(`${this.aggregatorURI}/dao/add-proposal`, {
       sender: walletService.getAddress(),
       proposal,
       txFee: this.defaultProposalTxFee.toString(),
@@ -88,7 +88,7 @@ export default class AggregatorService {
 
   @action async addSignatures(proposalId: string, signatures: string[]) {
       console.log('addSignatures', {proposalId, signatures});
-      await axios.post(`${this.aggregatorURI}/add-signatures`, {
+      await axios.post(`${this.aggregatorURI}/dao/add-signatures`, {
         proposalId,
         signatures
       }); 
@@ -96,7 +96,7 @@ export default class AggregatorService {
   }
 
   @action async sendProposal(proposalId: string) {
-    const response = await axios.post(`${this.aggregatorURI}/send-proposal`, {
+    const response = await axios.post(`${this.aggregatorURI}/dao/send-proposal`, {
         proposalId,
       }); 
       console.log('sendProposal', {proposalId, response: response.data});
